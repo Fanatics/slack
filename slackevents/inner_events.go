@@ -47,6 +47,22 @@ type AppUninstalledEvent struct {
 	Type string `json:"type"`
 }
 
+// ChannelCreatedEvent represents the Channel created event
+type ChannelCreatedEvent struct {
+	Type           string             `json:"type"`
+	Channel        ChannelCreatedInfo `json:"channel"`
+	EventTimestamp string             `json:"event_ts"`
+}
+
+// ChannelCreatedInfo represents the information associated with the Channel created event
+type ChannelCreatedInfo struct {
+	ID        string `json:"id"`
+	IsChannel bool   `json:"is_channel"`
+	Name      string `json:"name"`
+	Created   int    `json:"created"`
+	Creator   string `json:"creator"`
+}
+
 // GridMigrationFinishedEvent An enterprise grid migration has finished on this workspace.
 type GridMigrationFinishedEvent struct {
 	Type         string `json:"type"`
@@ -182,6 +198,26 @@ type TokensRevokedEvent struct {
 	Tokens tokens `json:"tokens"`
 }
 
+// EmojiChangedEvent is the event of custom emoji has been added or changed
+type EmojiChangedEvent struct {
+	Type           string      `json:"type"`
+	Subtype        string      `json:"subtype"`
+	EventTimeStamp json.Number `json:"event_ts"`
+
+	// filled out when custom emoji added
+	Name string `json:"name,omitempty"`
+
+	// filled out when custom emoji removed
+	Names []string `json:"names,omitempty"`
+
+	// filled out when custom emoji renamed
+	OldName string `json:"old_name,omitempty"`
+	NewName string `json:"new_name,omitempty"`
+
+	// filled out when custom emoji added or renamed
+	Value string `json:"value,omitempty"`
+}
+
 // JSONTime exists so that we can have a String method converting the date
 type JSONTime int64
 
@@ -290,6 +326,8 @@ const (
 	AppHomeOpened = "app_home_opened"
 	// AppUninstalled Your Slack app was uninstalled.
 	AppUninstalled = "app_uninstalled"
+	// ChannelCreated is sent when a new channel is created.
+	ChannelCreated = "channel_created"
 	// GridMigrationFinished An enterprise grid migration has finished on this workspace.
 	GridMigrationFinished = "grid_migration_finished"
 	// GridMigrationStarted An enterprise grid migration has started on this workspace.
@@ -312,6 +350,8 @@ const (
 	ReactionRemoved = "reaction_removed"
 	// TokensRevoked APP's API tokes are revoked
 	TokensRevoked = "tokens_revoked"
+	// EmojiChanged A custom emoji has been added or changed
+	EmojiChanged = "emoji_changed"
 )
 
 // EventsAPIInnerEventMapping maps INNER Event API events to their corresponding struct
@@ -321,6 +361,7 @@ var EventsAPIInnerEventMapping = map[string]interface{}{
 	AppMention:            AppMentionEvent{},
 	AppHomeOpened:         AppHomeOpenedEvent{},
 	AppUninstalled:        AppUninstalledEvent{},
+	ChannelCreated:        ChannelCreatedEvent{},
 	GridMigrationFinished: GridMigrationFinishedEvent{},
 	GridMigrationStarted:  GridMigrationStartedEvent{},
 	LinkShared:            LinkSharedEvent{},
@@ -332,4 +373,5 @@ var EventsAPIInnerEventMapping = map[string]interface{}{
 	ReactionAdded:         ReactionAddedEvent{},
 	ReactionRemoved:       ReactionRemovedEvent{},
 	TokensRevoked:         TokensRevokedEvent{},
+	EmojiChanged:          EmojiChangedEvent{},
 }
